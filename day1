@@ -1,0 +1,65 @@
+//brute force approach
+def maxSubarraySum(self, arr, k):
+    n=len(arr)
+    maxsum=0
+    for i in range(n-k+1):
+        s=0
+        for j in range(i,i+k):
+            s+=arr[j]
+        maxsum=max(maxsum,s)
+    return maxsum
+        
+
+//prefix sum approach
+def maxSubarraySum(self, arr, k):
+    n=len(arr)
+    ps=[0]*(n+1)
+    ms=0
+    for i in range(n):
+        ps[i+1]=ps[i]+arr[i]
+        for i in range(n-k+1):
+            cs=ps[i+k]-ps[i]
+        ms=max(ms,cs)
+    return ms       
+
+
+//sliding window approach(optimal)
+    def maxSubarraySum(self, arr, k):
+        n=len(arr)
+        wsum=sum(arr[:k])
+        ms=wsum
+        for i in range(k,n):
+            wsum=wsum-arr[i-k]+arr[i]
+            ms=max(ms,wsum)
+    
+        return ms
+        
+//leetcode 1423
+brute force approach
+class Solution:
+    def maxScore(self, cardPoints: List[int], k: int) -> int:
+        n=len(cardPoints)
+        ms=0
+        for i in range(k+1):
+            s=0
+            for left in range(i):
+                s+=cardPoints[left]
+            for r in range(k-i):
+                s+=cardPoints[n-1-r]
+            ms=max(s,ms)
+        return ms
+
+
+
+optimal solution 
+class Solution:
+    def maxScore(self, cardPoints: List[int], k: int) -> int:
+        n=len(cardPoints)
+        wss=n-k
+        ws=sum(cardPoints[:wss])
+        total=sum(cardPoints)
+        mws=ws
+        for i in range(wss,n):
+            ws+=cardPoints[i]-cardPoints[i-wss]
+            mws=min(mws,ws)
+        return total-mws
