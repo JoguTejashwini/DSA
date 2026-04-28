@@ -1,0 +1,76 @@
+#802
+
+class Solution:
+    def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
+        n=len(graph)
+        vis=[0]*n
+        path=[0]*n
+        check=[0]*n
+        def dfs(node):
+            vis[node]=1
+            path[node]=1
+            for nei in graph[node]:
+                if vis[nei]==0:
+                    if dfs(nei):
+                        return True
+                elif path[nei]==1:
+                    return True
+            check[node]=1
+            path[node]=0
+            return False
+
+        for i in range(n):
+            if vis[i]==0:
+                dfs(i)
+        res=[]
+        for i in range(n):
+            if check[i]==1:
+                res.append(i)
+        return res
+
+#207
+from collections import defaultdict
+def course(numcourses,prequisites):
+    graph=defaultdict(list)
+    indegree=[0]*numcourses
+    for course,des in prequisites:
+        graph[des].append(course)
+        indegree[course]+=1
+    q=[]
+    for i in range(numcourses):
+        if indegree[i]==0:
+            q.append(i)
+    finish=0
+    while q:
+        node=q.pop(0)
+        finish+=1
+        for nei in graph[node]:
+            indegree[nei]-=1
+            if indegree[nei]==0:
+                q.append(nei)
+    return finish==numcourses
+prequisites=[[1,0]]
+numcourses=2
+print(course(numcourses,prequisites))
+
+
+
+#wordladder
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        wordset=set(wordList)
+        if endWord not in wordset:
+            return 0
+        q=deque([(beginWord,1)])
+        while q:
+            word,steps=q.popleft()
+            if word==endWord:
+                return steps
+            for i in range(len(word)):
+                for ch in 'abcdefghijklmnopqrstuvwxyz':
+                    new=word[:i]+ch+word[i+1:]
+                    if new in wordset:
+                        q.append((new,steps+1))
+                        wordset.remove(new)
+        return 0
+        
